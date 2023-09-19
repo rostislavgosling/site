@@ -1,0 +1,29 @@
+{% extends "resume/base.html" %}
+{% load resume_tags %}
+
+{% block content %}
+        <table class="cards" border="0" cellspacing="0">
+            {% for r in resumes %}
+
+                {% if forloop.counter|add:2|divisibleby:"3" %}
+                <tr>
+                    <td>
+                {% else %}
+                        <td>
+
+                {% endif %}
+                 <a href="{{ r.get_absolute_url }}">
+                {% show_user_card r %}
+                 </a>
+                {% if forloop.counter|divisibleby:"3" %}
+                    </td></tr>
+
+                {% else %}
+                        </td>
+
+                {% endif %}
+
+            {% endfor %}
+        </table>
+
+{% endblock content %}
