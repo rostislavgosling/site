@@ -16,9 +16,15 @@
             <ul class="menu">
                 {% for m in menu %}
                     {% if not forloop.last %}
-                        <li><a href="{% url m.url_name %}">{{m.title}} </a></li>
+
+                        {% if m.url_name == 'home' %}
+                            <li><a href="{% url m.url_name page=1 %}">{{m.title}} </a></li>
+                        {% else %}
+                            <li><a href="{% url m.url_name %}">{{m.title}} </a></li>
+                        {% endif %}
+
                     {% else %}
-                        <li class="last"><a href="http://127.0.0.1:8000/admin/">{{m.title}}</a></li> <!-{% url m.url_name %} -!>
+                        <li class="last"><a href="http://127.0.0.1:8000/admin/">{{m.title}}</a></li>
                     {% endif %}
                 {% endfor %}
             </ul>

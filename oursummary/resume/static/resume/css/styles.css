@@ -176,3 +176,18 @@ table.cards td, table.cards th {
     padding: 10px; /* Внутренний отступ ячеек */
     text-align: left; /* Выравнивание текста в ячейках (по левому краю) */
 }
+
+ul.pages {
+  list-style: none; /* Убираем стандартные маркеры для списка */
+  padding: 0; /* Убираем внутренний отступ у списка */
+  margin: 0;
+  text-align: left;
+  overflow: hidden;
+
+}
+
+/* Стиль для отдельных элементов меню (ссылок) */
+ul.pages li {
+  float: left;
+  display: inline; /* Размещаем ссылки горизонтально */
+}

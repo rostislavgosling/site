@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, CreateView
 from .utils import *
 from .models import *
@@ -11,14 +11,19 @@ class Cards(MenuMixin, ListView):
     model = Resume
     template_name = 'resume/index.html'
     context_object_name = 'resumes'
+    cards_on_page = 6
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title="Главная страница", sidebar=True)
+        c_def = self.get_user_context(title="Главная страница",
+                                      sidebar=True,
+                                      all_pages=range(Resume.objects.all().count() // self.cards_on_page + 1))
+        print(range(Resume.objects.all().count() // self.cards_on_page))
         return dict(list(context.items()) + list(c_def.items()))
 
     def get_queryset(self):
-        return Resume.objects.all()
+        page = self.kwargs.get('page')
+        return Resume.objects.all()[self.cards_on_page * (page - 1):self.cards_on_page * page]
 
 
 def show_resume(request, username, resume_slug):
@@ -49,8 +54,6 @@ class AddResume(MenuMixin, CreateView):
         return super().form_valid(form)
 
 
-
-
-
-
+def redirect_to_main(request):
+    return redirect('home', page=1)
 

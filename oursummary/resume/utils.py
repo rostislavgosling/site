@@ -1,3 +1,4 @@
+from django.urls import path
 
 
 menu = [{'title': 'Главная страница', 'url_name': 'home'},
