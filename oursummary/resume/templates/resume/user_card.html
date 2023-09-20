@@ -1,9 +1,12 @@
-
-
+{% load static %}
 <div class="card-wrapper">
     <div class="card">
         <ul class="crd">
-        <li><img src="{{resume.photo.url}}" alt="Изображение"></li>
+            {% if resume.photo %}
+            <li><img src="{{resume.photo.url}}" alt="Изображение"></li>
+            {% else %}
+            <li><img src="{% static 'resume/img/test_img.jpg' %}" alt="Изображение"></li>
+            {% endif %}
             <li>
                 <div class="card-info">
                     <h2>{{resume.title}}</h2>

@@ -18,7 +18,7 @@
                     {% if not forloop.last %}
                         <li><a href="{% url m.url_name %}">{{m.title}} </a></li>
                     {% else %}
-                        <li class="last"><a href="{% url m.url_name %}">{{m.title}}</a></li>
+                        <li class="last"><a href="http://127.0.0.1:8000/admin/">{{m.title}}</a></li> <!-{% url m.url_name %} -!>
                     {% endif %}
                 {% endfor %}
             </ul>

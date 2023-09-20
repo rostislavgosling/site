@@ -9,7 +9,7 @@ class Resume(models.Model):
                             db_index=True, verbose_name='URL')
     letter = models.TextField(blank=True, verbose_name='Сопроводительное письмо')
 
-    photo = models.ImageField(upload_to='photos/%Y/%m/%d')
+    photo = models.ImageField(upload_to='photos/%Y/%m/%d', blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
     time_updated = models.DateTimeField(auto_now=True)
     is_shown = models.BooleanField(default=True)
