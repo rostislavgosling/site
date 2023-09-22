@@ -1,7 +1,10 @@
 {% extends 'resume/base.html' %}
 
 {% block content %}
-<form action="{% url 'add_resume' %}" method="post" enctype="multipart/form-data">
+
+<a href="{% url 'init' %}">Пропустить форму</a>
+  <form action="{% if arg %} {% url url arg %} {% else %} {% url url %} {% endif %}" method="post" enctype="multipart/form-data">
+
   {% csrf_token %}
 
   {{form.errors.as_p}}

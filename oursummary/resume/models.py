@@ -1,5 +1,5 @@
 from django.urls import reverse
-
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -13,18 +13,21 @@ class Resume(models.Model):
     time_created = models.DateTimeField(auto_now_add=True)
     time_updated = models.DateTimeField(auto_now=True)
     is_shown = models.BooleanField(default=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def get_absolute_url(self):
-        return reverse('resume', kwargs={'username': 'user',
-                                         'resume_slug': self.slug})
+        return reverse('resume', kwargs={'resume_slug': self.slug})
 
 
 class Education(models.Model):
     title = models.CharField(max_length=255, verbose_name='Учебное учреждение')
-    year_start = models.CharField(max_length=4)
-    year_end = models.CharField(max_length=4, blank=True)
+    year_start = models.DateField()
+    year_end = models.DateField(blank=True)
     specialization = models.CharField(max_length=255, verbose_name='Специальность')
-    resume = models.ForeignKey('Resume', on_delete=models.CASCADE)
+    resume = models.ForeignKey('Resume', on_delete=models.CASCADE, related_name='education')
+
+    def get_absolute_url(self):
+        return reverse('resume', kwargs={'resume_slug': self.resume.slug})
 
     def __str__(self):
         return f'{self.year_start}-{self.year_end} {self.title}\n {self.specialization}'

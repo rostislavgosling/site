@@ -1,0 +1,17 @@
+{% extends 'resume/base.html' %}
+
+{% block content %}
+<h1>Ваши резюме</h1>
+
+<ul>
+    {% for r in resumes %}
+
+    <li><a href="{{r.get_absolute_url}}">
+     <h2>{{r.title}}</h2></a>
+        <p> {{r.letter}}</p>
+    </li>
+
+    {% endfor %}
+
+</ul>
+{% endblock content %}

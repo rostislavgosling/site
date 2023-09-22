@@ -191,3 +191,20 @@ ul.pages li {
   float: left;
   display: inline; /* Размещаем ссылки горизонтально */
 }
+
+
+.left-line {
+    padding: 30px;
+    background: #ffc184;
+    border-right: 1px solid #ccc;
+    height: 0%;
+}
+
+.table-content {
+	width: 100%;
+	min-height: 100%;
+}
+
+td.footer{
+background-color: #eee;
+}

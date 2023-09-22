@@ -19,6 +19,8 @@
 
                         {% if m.url_name == 'home' %}
                             <li><a href="{% url m.url_name page=1 %}">{{m.title}} </a></li>
+                        {% elif m.url_name == 'my_resumes' %}
+                             <li><a href="{% url m.url_name username=username %}">{{m.title}} </a></li>
                         {% else %}
                             <li><a href="{% url m.url_name %}">{{m.title}} </a></li>
                         {% endif %}
@@ -34,6 +36,10 @@
 
            {% if sidebar %}
                {% show_sidebar %}
+               {% else %}
+               <td valign="top" class="left-line">
+               </td>
+
            {% endif %}
 
 
@@ -46,7 +52,13 @@
 
            </tr></table>
 
- </td></tr></table>
+ </td></tr>
+
+<tr><td valign=top class="footer">
+	<div>
+		<p>&copy; Some info </p>
+	</div>
+</td></tr></table>
 
 </body>
 </html>
