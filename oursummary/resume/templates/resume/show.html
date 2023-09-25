@@ -20,14 +20,14 @@
             {% if resume.education.all %}
                 <h2>Образование</h2>
                 {% for ed in resume.education.all %}
-                    <p>{{ed}}</p>
+                    <p>{{ed}}</p>{% if resume.user.username == username%}<a href="{% url 'delete_education' ed.pk %}">Удалить</a>{% endif %}
                 {% endfor %}
             {% endif %}
 
             {% if resume.experience.all %}
             <h2>Опыт работы</h2>
                 {% for ex in resume.experience.all %}
-                    <p>{{ex}}</p>
+                    <p>{{ex}}</p>{% if resume.user.username == username%}<a href="{% url 'delete_experience' ex.pk %}">Удалить</a>{% endif %}
                 {% endfor %}
             {% endif %}
         </td>
@@ -36,5 +36,11 @@
 
 
 </table>
-
+{% if resume.user.username == username%}
+<ul class="menu">
+    <li><a href="{% url 'update_resume' resume.slug %}">Редактировать</a></li>
+    <li><a href="{% url 'add_education' resume.slug %}">Добавить образование</a></li>
+    <li><a href="{% url 'add_experience' resume.slug %}">Добавить опыт работы</a></li>
+</ul>
+{% endif %}
 {% endblock content %}

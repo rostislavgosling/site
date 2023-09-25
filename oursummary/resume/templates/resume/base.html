@@ -19,8 +19,6 @@
 
                         {% if m.url_name == 'home' %}
                             <li><a href="{% url m.url_name page=1 %}">{{m.title}} </a></li>
-                        {% elif m.url_name == 'my_resumes' %}
-                             <li><a href="{% url m.url_name username=username %}">{{m.title}} </a></li>
                         {% else %}
                             <li><a href="{% url m.url_name %}">{{m.title}} </a></li>
                         {% endif %}

@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from .utils import *
 from .models import *
 from .forms import *
@@ -34,7 +34,7 @@ class Cards(MenuMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Главная страница",
-                                      sidebar=True,
+                                      sidebar=False,
                                       all_pages=range(Resume.objects.all().count() // self.cards_on_page + 1))
         return dict(list(context.items()) + list(c_def.items()))
 
@@ -91,12 +91,25 @@ class AddResume(LoginRequiredMixin, MenuMixin, CreateView):
         translit_title = translit(title_to_convert, 'ru', reversed=True)
         unique_url = create_unique_url(f'{self.request.user.username}-{translit_title}')
         resume_form.slug = unique_url
-        self.success_url = reverse_lazy('add_education',
-                                        kwargs={'resume_slug': unique_url})
         # Привязываем резюме к юзеру
         resume_form.user = User.objects.get(username=self.request.user.username)
-
         return super().form_valid(form)
+
+
+class ResumeUpdate(MenuMixin, UpdateView):
+    model = Resume
+    template_name = 'resume/add_resume.html'
+    fields = ['title', 'letter']
+    slug_url_kwarg = 'resume_slug'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Обновление резюме",
+                                      sidebar=False,
+                                      arg=self.kwargs.get('resume_slug'),
+                                      url='update_resume'
+                                      )
+        return dict(list(context.items()) + list(c_def.items()))
 
 
 class AddEducation(MenuMixin, CreateView):
@@ -122,28 +135,40 @@ class AddEducation(MenuMixin, CreateView):
         return super().form_valid(form)
 
 
-# class AddExperience(MenuMixin, CreateView):
-#     model = Experience
-#     form_class = AddExperienceForm
-#     template_name = 'resume/add_resume.html'
-#     login_url = reverse_lazy('home', kwargs={'page': 1})
-#
-#     def get_context_data(self, *, object_list=None, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         c_def = self.get_user_context(title="Добавление образования",
-#                                       sidebar=False,
-#                                       arg=self.kwargs.get('resume_slug'),
-#                                       url='add_education'
-#                                       )
-#         return dict(list(context.items()) + list(c_def.items()))
-#
-#     def form_valid(self, form):
-#         # Создаем объект класса формы
-#         edc_form = form.save(commit=False)
-#         # Добавляем ключ для Resume элемента
-#         edc_form.resume = Resume.objects.get(slug=self.kwargs.get('resume_slug'))
-#         return super().form_valid(form)
-#
+class DeleteEducation(MenuMixin, DeleteView):
+    model = Education
+    template_name = 'resume/delete.html'
+    success_url = '/myresumes/'
+
+
+class AddExperience(MenuMixin, CreateView):
+    model = Experience
+    form_class = AddExperienceForm
+    context_object_name = 'ex'
+    template_name = 'resume/add_resume.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Добавление опыта работы",
+                                      sidebar=False,
+                                      arg=self.kwargs.get('resume_slug'),
+                                      url='add_experience'
+                                      )
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def form_valid(self, form):
+        # Создаем объект класса формы
+        edc_form = form.save(commit=False)
+        # Добавляем ключ для Resume элемента
+        edc_form.resume = Resume.objects.get(slug=self.kwargs.get('resume_slug'))
+        return super().form_valid(form)
+
+
+class DeleteExperience(MenuMixin, DeleteView):
+    model = Experience
+    template_name = 'resume/delete.html'
+    success_url = '/myresumes/'
+
 
 class MyResumes(LoginRequiredMixin, MenuMixin, ListView):
     """

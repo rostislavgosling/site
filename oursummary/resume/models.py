@@ -38,7 +38,10 @@ class Experience(models.Model):
     date_start = models.DateField()
     date_end = models.DateField(blank=True)
     post = models.CharField(max_length=255)
-    resume = models.ForeignKey('Resume', on_delete=models.CASCADE)
+    resume = models.ForeignKey('Resume', on_delete=models.CASCADE, related_name='experience')
+
+    def get_absolute_url(self):
+        return reverse('resume', kwargs={'resume_slug': self.resume.slug})
 
     def __str__(self):
         return f'{self.date_start}-{self.date_end} {self.title}\n {self.post}'
