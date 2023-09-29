@@ -7,9 +7,14 @@ menu = [{'title': 'Главная страница', 'url_name': 'home'},
         {'title': 'Войти', 'url_name': 'home'},
         ]
 
+card_filter = [{'filter': 'Earliest', 'title': 'Последние'},
+               {'filter': 'Latest', 'title': 'Ранние'},
+               {'filter': 'Experience', 'title': 'Есть опыт'},
+               {'filter': 'Education', 'title': 'Есть образование'},
+               {'filter': 'Drop', 'title': 'Сбросить'}]
+
 
 class MenuMixin:
-
     def get_user_context(self, **kwargs):
 
         user_menu = menu.copy()
@@ -20,5 +25,6 @@ class MenuMixin:
         context = kwargs
         context['menu'] = user_menu
         context['username'] = self.request.user.username
+        context['card_filter'] = card_filter
 
         return context

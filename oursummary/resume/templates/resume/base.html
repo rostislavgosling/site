@@ -16,13 +16,7 @@
             <ul class="menu">
                 {% for m in menu %}
                     {% if not forloop.last %}
-
-                        {% if m.url_name == 'home' %}
-                            <li><a href="{% url m.url_name page=1 %}">{{m.title}} </a></li>
-                        {% else %}
-                            <li><a href="{% url m.url_name %}">{{m.title}} </a></li>
-                        {% endif %}
-
+                        <li><a href="{% url m.url_name %}">{{m.title}} </a></li>
                     {% else %}
                         <li class="last"><a href="http://127.0.0.1:8000/admin/">{{m.title}}</a></li>
                     {% endif %}
@@ -33,7 +27,7 @@
            <tr>
 
            {% if sidebar %}
-               {% show_sidebar %}
+               {% show_sidebar card_filter %}
                {% else %}
                <td valign="top" class="left-line">
                </td>

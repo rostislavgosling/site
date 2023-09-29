@@ -27,8 +27,8 @@
     {% endfor %}
 </table>
 <ul class="pages">
-{% for p in all_pages %}
-    <li><a href="{% url 'home' page=forloop.counter %}">{{forloop.counter}}</a></li>
+{% for _ in all_pages %}
+    <li><a href="?page={{forloop.counter}}">{{forloop.counter}}</a></li>
 {% endfor %}
 </ul>
 {% endblock content %}

@@ -1,10 +1,9 @@
 <td valign="top" class="left-chapters">
-
+    <h2>Фильтры</h2>
             <ul>
-                <li><a href="#"> Cсылка 1</a></li>
-                <li><a href="#"> Cсылка 2</a></li>
-                <li><a href="#"> Cсылка 3</a></li>
-                <li><a href="#"> Cсылка 4</a></li>
+               {% for fi in sidebar %}
+                <li><a href="?filter={{fi.filter}}">{{fi.title}}</a></li>
+                {% endfor %}
             </ul>
 
 </td>

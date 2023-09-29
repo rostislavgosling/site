@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -8,10 +9,11 @@ from .models import *
 from .forms import *
 from transliterate import translit
 import uuid
+from django.db import connection
 
 
 def redirect_to_main(request):
-    return redirect('home', page=1)
+    return redirect('home')
 
 
 def create_unique_url(user_input):
@@ -32,15 +34,41 @@ class Cards(MenuMixin, ListView):
     cards_on_page = 6
 
     def get_context_data(self, *, object_list=None, **kwargs):
+
+        if Resume.objects.all().count() % self.cards_on_page == 0:
+            pages = range(Resume.objects.all().count() // self.cards_on_page)
+        else:
+            pages = range(Resume.objects.all().count() // self.cards_on_page+1)
+
         context = super().get_context_data(**kwargs)
+
         c_def = self.get_user_context(title="Главная страница",
-                                      sidebar=False,
-                                      all_pages=range(Resume.objects.all().count() // self.cards_on_page + 1))
+                                      sidebar=True,
+                                      all_pages=pages)
         return dict(list(context.items()) + list(c_def.items()))
 
     def get_queryset(self):
-        page = self.kwargs.get('page')
-        return Resume.objects.all()[self.cards_on_page * (page - 1):self.cards_on_page * page]
+        page = self.request.GET.get('page')
+
+        if not page:
+            page = 1
+        else:
+            page = int(page)
+
+        filter_page = self.request.GET.get('filter')
+        if filter_page == 'Drop' or not filter_page:
+            return Resume.objects.all()[self.cards_on_page * (page - 1):self.cards_on_page * page]
+        elif filter_page == 'Earliest':
+            return Resume.objects.all().order_by('time_created')[self.cards_on_page * (page - 1):self.cards_on_page * page]
+        elif filter_page == 'Latest':
+            return Resume.objects.all().order_by('-time_created')[self.cards_on_page * (page - 1):self.cards_on_page * page]
+        elif filter_page == 'Experience':
+            exp = Resume.objects.annotate(total_exp=Sum('experience'))
+            return exp.filter(total_exp__gt=0)[self.cards_on_page * (page - 1):self.cards_on_page * page]
+        elif filter_page == 'Education':
+            exp = Resume.objects.annotate(total_edc=Sum('education'))
+            return exp.filter(total_edc__gt=0)[self.cards_on_page * (page - 1):self.cards_on_page * page]
+
 
 
 class ShowResume(MenuMixin, DetailView):
